@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+const path = require('path')
+const bootstrap = require('@atools/cf').bootstrap
+const Space = require('../lib/shared/space')
+
+bootstrap.hooks.listen('will-parse', async (next) => {
+  console.log(`
+  ██████╗  ██████╗ ██████╗ ████████╗██████╗  █████╗ ██╗   ██╗ █████╗ ██╗     
+  ██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗╚██╗ ██╔╝██╔══██╗██║     
+  ██████╔╝██║   ██║██████╔╝   ██║   ██████╔╝███████║ ╚████╔╝ ███████║██║     
+  ██╔═══╝ ██║   ██║██╔══██╗   ██║   ██╔══██╗██╔══██║  ╚██╔╝  ██╔══██║██║     
+  ██║     ╚██████╔╝██║  ██║   ██║   ██║  ██║██║  ██║   ██║   ██║  ██║███████╗
+  ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝  
+  `)
+
+  // check env
+
+  // initialize portrayal space
+
+
+  await next()
+})
+
+bootstrap({
+  root: path.join(__dirname, '..', 'lib', 'commands'),
+  version: require('../package.json').version
+})

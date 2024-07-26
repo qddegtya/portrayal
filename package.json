@@ -1,0 +1,30 @@
+{
+  "name": "@atools/portrayal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "bin": {
+    "pt": "./bin/portrayal"
+  },
+  "scripts": {
+    "cf-add": "./node_modules/.bin/cf add --output=./src/commands --template=./src/commands/cmd.tpl",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint --ext .js src/** --fix",
+    "dev": "rimraf ./lib && ./node_modules/.bin/babel src --out-dir lib --watch",
+    "build": "rimraf ./lib && ./node_modules/.bin/babel src --out-dir lib"
+  },
+  "author": "xiaoa",
+  "license": "MIT",
+  "devDependencies": {
+    "@atools/cf": "^1.0.12",
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.7",
+    "@babel/preset-env": "^7.16.11",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.11.0",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "@gitbeaker/node": "^35.5.0"
+  }
+}
