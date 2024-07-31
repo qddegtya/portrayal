@@ -7,7 +7,7 @@ const GitlabPlugin = require("../../portrayal-units/gitlab").default;
 export default class Generate extends BC {
   static command = "generate";
   static alias = "ge";
-  static description = "genereate with portrayal unit";
+  static description = "generate with portrayal unit";
 
   init(commander) {}
 
