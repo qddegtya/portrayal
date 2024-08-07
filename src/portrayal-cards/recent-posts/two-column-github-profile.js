@@ -20,34 +20,24 @@ export default ({
     return `* <a href='${post.link}' target='_blank'>${post.title}</a> - ${post.date}`;
   });
 
-  return `
-    <table width="960px;">
-      <tr>
-      <td valign="top" width="50%">
+  return `<table width="960px;">
+  <tr>
+  <td valign="top" width="50%">
 
-      #### ${left.emoji} <a href="${left.link}" target="_blank">${
-    left.title
-  }</a>
+  #### ${left.emoji} <a href="${left.link}" target="_blank">${left.title}</a>
 
-      ---
+  ---\n\n${leftPosts.map(p => `  ${p}`).join("\n")}
+  <br />
 
-      ${leftPosts.join("\n")}
-      
-      <br />
+  </td>
+  <td valign="top" width="50%">
 
-      </td>
-      <td valign="top" width="50%">
+  #### ${right.emoji} <a href="${right.link}" target="_blank">${right.title}</a>
 
-      #### ${right.emoji} <a href="${right.link}" target="_blank">${
-    right.title
-  }</a>
-
-      ---
-
-      ${rightPosts.join("\n")}
-
-      </td>
-      </tr>
-    </table>
-  `;
+  ---\n\n${rightPosts.map(p => `  ${p}`).join("\n")}
+  <br />
+  
+  </td>
+  </tr>
+</table>`;
 };
