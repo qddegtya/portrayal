@@ -16,7 +16,6 @@
   "author": "xiaoa",
   "license": "MIT",
   "devDependencies": {
-    "@atools/cf": "^1.0.12",
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.7",
     "@babel/preset-env": "^7.16.11",
@@ -25,6 +24,7 @@
     "rimraf": "^3.0.2"
   },
   "dependencies": {
+    "@atools/cf": "^1.0.12",
     "@extractus/feed-extractor": "^7.1.3",
     "@yuque/sdk": "^1.1.1",
     "dayjs": "^1.11.12",
