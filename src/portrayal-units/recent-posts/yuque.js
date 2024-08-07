@@ -5,7 +5,11 @@ const YUQUE_HOME = `https://www.yuque.com`;
 const YMD = (date) => dayjs(date).format("YYYY-MM-DD");
 
 // 返回语雀最近文章
-export default async ({ token = "", includeRepos = [], nums = 5 } = {}) => {
+export default async ({
+  token = process.env.YUQUE_TOKEN || "",
+  includeRepos = [],
+  nums = 5,
+} = {}) => {
   let latestPosts = [];
 
   // 初始化 yuque sdk
