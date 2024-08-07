@@ -2,40 +2,109 @@
 // @@ 因此，不要改动和删除此文件 @@
 
 const BC = require("@atools/cf").BC;
-const GitlabPlugin = require("../../portrayal-units/gitlab").default;
+const AJS = require("xajs");
+import getRecentPosts from "../../portrayal-units/recent-posts";
+import TwoColRecentPostsForGithubProfile from "../../portrayal-cards/recent-posts/two-column-github-profile";
+import YAML from "yaml";
+import path from "node:path";
+import fs from "node:fs";
+
+const cwd = process.cwd();
 
 export default class Generate extends BC {
   static command = "generate";
   static alias = "ge";
   static description = "generate with portrayal unit";
 
-  init(commander) {}
+  _loadConfigFile(rootDir) {
+    const _readFile = (name) =>
+      fs.readFileSync(path.join(rootDir, name), "utf-8");
+
+    // 按照优先级依次加载配置
+    const _load = AJS.functional.helper.tryNext(() => {
+      this.configFile = _readFile(".portrayal.yml");
+    });
+
+    _load
+      .tryNext(() => {
+        this.configFile = _readFile(".portrayal.json");
+      })
+      .tryNext(() => {
+        this.configFile = _readFile("portrayal.config.yml");
+      })
+      .tryNext(() => {
+        this.configFile = _readFile("portrayal.config.json");
+      });
+
+    // load
+    _load();
+
+    if (!this.configFile) throw new Error("Config file not found.");
+  }
+
+  init(commander) {
+    this.commander = commander;
+    this.commander.option(
+      "-o, --output <dir>",
+      "output dir",
+      path.join(cwd, ".portrayal")
+    );
+
+    try {
+      this._loadConfigFile(cwd);
+    } catch (error) {
+      console.log("Load config file failed.");
+      process.exit(1);
+    }
+
+    this.config = YAML.parse(this.configFile)["portrayal"];
+  }
 
   async do() {
-    const api = await GitlabPlugin();
-    const events = await api.Users.events(1192);
+    const { yuque: yuqueRecentPosts, blog: blogRecentPosts } =
+      await getRecentPosts(
+        this.config["units"]["@atools/portrayal-units-recent-posts"]
+      );
 
-    const commit = await api.Commits.show(4800, 'f0564f8c5997a24eddbb6fe38cff9d0e21543c03');
+    const twoColumnGithubProfileConfig =
+      this.config["cards"]["@atools/portrayal-cards-recent-posts"][
+        "two-column-github-profile"
+      ];
 
-    console.log(commit);
+    const twoColRecentPostsForGithubProfile = TwoColRecentPostsForGithubProfile(
+      {
+        left: {
+          emoji: "🍩",
+          posts: yuqueRecentPosts.data.body.map((post) => {
+            return {
+              title: post.title,
+              date: post.updated_at,
+              link: post.url,
+            };
+          }),
+          title: twoColumnGithubProfileConfig.left.title,
+          link: twoColumnGithubProfileConfig.left.link,
+        },
+        right: {
+          emoji: "🍰",
+          posts: blogRecentPosts.data.body.map((post) => {
+            return {
+              title: post.title,
+              date: post.date,
+              link: post.link,
+            };
+          }),
+          title: twoColumnGithubProfileConfig.right.title,
+          link: twoColumnGithubProfileConfig.right.link,
+        },
+      }
+    );
 
-    const counts = events
-      .filter((event) => {
-        return event["push_data"] && event["push_data"]["commit_count"];
-      })
-      .map((event) => {
-        const projectId = event['project_id'];
-
-        // console.log(commit)
-
-        return event;
-      })
-      .reduce((pre, currentCommit) => {
-        // console.log(currentCommit)
-
-        return pre + currentCommit["push_data"]["commit_count"];
-      }, 0);
-
-    console.log(counts);
+    const outputDir = this.commander.opts().output;
+    await fs.mkdirSync(outputDir);
+    await fs.writeFileSync(
+      path.join(outputDir, ".twoColRecentPostsForGithubProfile.markdown"),
+      twoColRecentPostsForGithubProfile
+    );
   }
 }
