@@ -74,7 +74,7 @@ export default class Generate extends BC {
     const twoColRecentPostsForGithubProfile = TwoColRecentPostsForGithubProfile(
       {
         left: {
-          emoji: "🍩",
+          emoji: twoColumnGithubProfileConfig.left.emoji,
           posts: yuqueRecentPosts.data.body.map((post) => {
             return {
               title: post.title,
@@ -86,7 +86,7 @@ export default class Generate extends BC {
           link: twoColumnGithubProfileConfig.left.link,
         },
         right: {
-          emoji: "🍰",
+          emoji: twoColumnGithubProfileConfig.right.emoji,
           posts: blogRecentPosts.data.body.map((post) => {
             return {
               title: post.title,
